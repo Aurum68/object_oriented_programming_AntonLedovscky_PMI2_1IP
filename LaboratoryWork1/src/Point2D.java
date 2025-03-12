@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Point2D implements Iterable<Point2D>{
 
@@ -91,6 +88,18 @@ public class Point2D implements Iterable<Point2D>{
             return;
         }
         points.set(index, point);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || this.getClass() != o.getClass()) return false;
+        Point2D point2D = (Point2D) o;
+        return x == point2D.x && y == point2D.y && correct == point2D.correct;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, correct);
     }
 
     @Override

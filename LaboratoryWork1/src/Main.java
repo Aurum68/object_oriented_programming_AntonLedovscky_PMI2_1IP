@@ -38,5 +38,14 @@ public class Main {
         Point2D point = new Point2D(11, 11);
         points1.setPoint(3, point);
         System.out.println(points1);
+
+        System.out.println();
+
+        System.out.println(vectors.getVector(0) + " * " + vectors.getVector(1) + " = "
+                + Vector2D.dotProduct(vectors.getVector(0), vectors.getVector(1)));
+        System.out.println(vectors.getVector(0) + " x " + vectors.getVector(1) + " = "
+                + Vector2D.crossProduct(vectors.getVector(0), vectors.getVector(1)));
+        System.out.println("Module of " + vectors.getVector(0) + " x " + vectors.getVector(1) + " = "
+                + Vector2D.crossProductModule(vectors.getVector(0), vectors.getVector(1)));
     }
 }

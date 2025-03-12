@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Vector2D implements Iterable<Vector2D> {
     private int x;
@@ -77,6 +74,18 @@ public class Vector2D implements Iterable<Vector2D> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null || this.getClass() != o.getClass()) return false;
+        Vector2D vector2D = (Vector2D) o;
+        return x == vector2D.x && y == vector2D.y && z == vector2D.z;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
+    }
+
+    @Override
     public Iterator<Vector2D> iterator() {
         if (vectors != null) {return vectors.iterator();}
         return Collections.emptyIterator();
@@ -101,6 +110,20 @@ public class Vector2D implements Iterable<Vector2D> {
                         + (double) vector.getY() * vector.getY()
                         + (double) vector.getZ() * vector.getZ());
         return String.format("%.2f", abs);
+    }
+
+    public static int dotProduct(Vector2D vector1, Vector2D vector2){
+        return vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY() + vector1.getZ() * vector2.getZ();
+    }
+
+    public static Vector2D crossProduct(Vector2D vector1, Vector2D vector2){
+        return new Vector2D(vector1.getY() * vector2.getZ() - vector1.getZ() * vector2.getY(),
+                vector1.getZ() * vector2.getX() - vector1.getX() * vector2.getZ(),
+                vector1.getX() * vector2.getY() - vector1.getY() * vector2.getX());
+    }
+
+    public static String crossProductModule(Vector2D vector1, Vector2D vector2){
+        return abs((crossProduct(vector1, vector2)));
     }
 
     public Vector2D add(Vector2D vector) {
