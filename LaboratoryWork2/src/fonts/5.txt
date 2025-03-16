@@ -1,0 +1,155 @@
+    x
+   x  x
+  x xx x
+ x      x
+x        x
+
+xx  xx xx
+x        x
+xx xx xxx
+x        x
+xx  xx xx
+
+xx  xx xx
+x        x
+x
+x        x
+xx  xx xx
+
+xx xx
+ x   x
+ x    x
+ x     x
+ xx xx xx
+
+xx  xx xx
+x
+xx xx
+x
+xx  xx xx
+
+xx  xx xx
+x
+xx xx
+x
+x
+
+xx  xx x
+x
+x     xx x
+x        x
+xx  xx xx
+
+x        x
+x        x
+xx xxxx xx
+x        x
+x        x
+
+xx xx xx x
+    x
+    x
+    x
+xx xx xx x
+
+xx xx xx x
+    x
+    x
+    x
+ x x
+
+x      xxx
+x  xxx
+xx
+x  xxx
+x      xxx
+
+x
+x
+x
+x        x
+xx xx xxx
+
+xx      xx
+x x    x x
+x  x  x  x
+x   xx   x
+x        x
+
+xx       x
+x x      x
+x   x    x
+x     x  x
+x       xx
+
+ xx xx xx
+x        x
+x        x
+x        x
+ xx xx xx
+
+xx  xx xx
+x        x
+xx xx xxx
+x
+x
+
+ xx xx x
+x       x
+x     x x
+x      xx
+ xx xx x x
+
+xx  xx xx
+x        x
+xx xx xxx
+xxx
+x  xx
+
+     x xx
+    x    x
+    x
+x  x
+ xx
+
+xx xx xx x
+    x
+    x
+    x
+    x
+
+x        x
+x        x
+x        x
+x        x
+ xx xx xx
+
+x        x
+ x      x
+  x    x
+   x  x
+    x
+
+x        x
+x   xx   x
+x  x  x  x
+x x    x x
+xx      xx
+
+xx      xx
+  xx  xx
+    xx
+  xx  xx
+xx      xx
+
+xx      xx
+  xx  xx
+    xx
+    xx
+    xx
+
+xx  xx  xx
+       xx
+   xx
+xx
+xx  xx  xx
