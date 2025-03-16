@@ -6,7 +6,8 @@ public enum Colors {
     BLUE	("\u001B[34m"),
     PURPLE	("\u001B[35m"),
     CYAN	("\u001B[36m"),
-    WHITE	("\u001B[37m");
+    WHITE	("\u001B[37m"),
+    RESET   ("\u001B[0m");
 
     private final String colorCode;
 

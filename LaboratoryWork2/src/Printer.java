@@ -99,24 +99,18 @@ public class Printer implements AutoCloseable{
             }
             System.out.println();
         }
+
+        this.close();
     }
 
     @Override
     public void close() throws Exception {
         if (!correctColorName){
-            if (font != null) {
-                font.clear();
-            }
             throw new IllegalArgumentException("Invalid color name.");
         }
         if (!correctSize){
-            if (font != null) {
-                font.clear();
-            }
             throw new IllegalArgumentException("Invalid size.");
         }
-        if (font != null) {
-            font.clear();
-        }
+        System.out.print(Colors.RESET.getColorCode());
     }
 }

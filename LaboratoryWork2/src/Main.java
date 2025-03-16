@@ -7,5 +7,7 @@ public class Main {
             System.out.print("Enter an English word: ");
             printer.print(sc.nextLine());
         }
+        sc.close();
+        System.out.println("Done!");
     }
 }
