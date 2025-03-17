@@ -1,68 +1,53 @@
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Printer implements AutoCloseable{
 
     private final String COLOR_CODE;
-    private boolean correctColorName;
     private final int SIZE;
-    private boolean correctSize;
-    private final List<String> font;
+    private final boolean correctSize;
+    private final List<Integer> position;
+    private final String fileName;
+    private final char symbol;
 
     /**
-     * @param colorName : BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE in any registers.
      * @param size can be 7 or 5
      * @param symbolOpt unnecessary char
      * */
-    public Printer(String colorName, int size, Character... symbolOpt) throws Exception {
-        colorName = colorName.toUpperCase();
-        if (!checkCorrectOfColorName(colorName)){
-            this.close();
+    public Printer(Colors colorName, Integer[] position, int size, Character... symbolOpt) throws Exception {
+        if (position.length != 2){
+            throw new IllegalArgumentException("Incorrect array size. It must be 2. " + position.length + " got");
         }
-        this.COLOR_CODE = Colors.valueOf(colorName).getColorCode();
-        if (!checkCorrectSize(size)){
+        this.position = Arrays.asList(position);
+
+        this.correctSize = checkCorrectSize(size);
+        if (!this.correctSize){
             this.close();
         }
         this.SIZE = size;
 
-        String fileName = "src/fonts/" + size + ".txt";
-        this.font = Files.readAllLines(Paths.get(fileName));
-        char symbol = symbolOpt.length > 0 ? symbolOpt[0] : 'x';
-        if (symbol != 'x'){
-            font.replaceAll(s -> s.replace('x', symbol));
-        }
+        this.fileName = "src/fonts/" + size + ".json";
+        this.symbol = symbolOpt.length > 0 ? symbolOpt[0] : 'x';
+        this.COLOR_CODE = colorName.getColorCode();
     }
 
-    private boolean checkCorrectOfColorName(String colorName){
-        for (Colors color : Colors.values()){
-            if (color.name().equals(colorName)){
-                correctColorName = true;
-                return true;
-            }
-        }
-        correctColorName = false;
-        return false;
-    }
-
-    private boolean checkCorrectSize(int size){
+    private static boolean checkCorrectSize(int size){
         File folder = new File("src/fonts");
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles != null) {
             for (File file : listOfFiles) {
-                if (file.getName().equals(size + ".txt")){
-                    correctSize = true;
+                if (file.getName().equals(size + ".json")){
                     return true;
                 }
             }
         }
-        correctSize = false;
         return false;
     }
 
-    private TreeMap<Character, Integer> messageToMap(String message){
+    private static TreeMap<Character, Integer> messageToMap(String message){
         TreeMap<Character, Integer> charNumber = new TreeMap<>();
         for (char c : message.toCharArray()){
             charNumber.put(c, Character.getNumericValue(c) - Character.getNumericValue('A'));
@@ -70,13 +55,39 @@ public class Printer implements AutoCloseable{
         return charNumber;
     }
 
-    private Character checkCorrectMessage(String message){
+    private static Character checkCorrectMessage(String message){
         for (char c : message.toCharArray()){
             if (!('A' <= c && c <= 'Z')){
                 return c;
             }
         }
         return null;
+    }
+
+    private static String[] parseJsonFile(String fileName, Character character) throws Exception {
+        Object o = new JSONParser().parse(new FileReader(fileName));
+        JSONObject jsonObject = (JSONObject) o;
+        String key = character.toString();
+        String value = jsonObject.get(key).toString();
+        return value.split("\n");
+    }
+
+    private static TreeMap<Character, String[]> createFontForMessage(String message, String fileName) throws Exception {
+        TreeMap<Character, Integer> charNumber = messageToMap(message);
+
+        TreeMap<Character, String[]> font = new TreeMap<>();
+        for (Character c : charNumber.keySet()){
+            font.put(c, parseJsonFile(fileName, c));
+        }
+
+        return font;
+    }
+
+    private static String[] replace(String[] array, char symbol){
+        for (int i = 0; i < array.length; i++){
+            array[i] = array[i].replace('x', symbol);
+        }
+        return array;
     }
 
     public void print(String message) throws Exception {
@@ -88,10 +99,22 @@ public class Printer implements AutoCloseable{
         }
         TreeMap<Character, Integer> charNumber = messageToMap(message);
 
+        for (int i = 0; i < this.position.getLast(); i++){
+            System.out.println();
+        }
+
+        TreeMap<Character, String[]> font = createFontForMessage(message, this.fileName);
+
+        if (this.symbol != 'x'){
+            for (Character c : charNumber.keySet()){
+                font.put(c, replace(font.get(c), this.symbol));
+            }
+        }
+
         for (int j =0 ; j < this.SIZE; j++) {
+            System.out.print(" ".repeat(this.position.getFirst()));
             for (int i = 0; i < message.length(); i++) {
-                int index = charNumber.get(message.charAt(i));
-                String lineFromFont = font.get((this.SIZE + 1) * index + j);
+                String lineFromFont = font.get(message.charAt(i))[j];
                 if (lineFromFont.length() < this.SIZE * 2 + 2){
                     lineFromFont += " ".repeat(this.SIZE * 2 - lineFromFont.length() + 2);
                 }
@@ -100,14 +123,17 @@ public class Printer implements AutoCloseable{
             System.out.println();
         }
 
-        this.close();
+        System.out.print(Colors.RESET.getColorCode());
+    }
+
+    public static void print(String message, Colors color, Integer[] position, int size, Character... symbOpt) throws Exception {
+        try(Printer printer = new Printer(color, position, size, symbOpt)) {
+            printer.print(message);
+        }
     }
 
     @Override
     public void close() throws Exception {
-        if (!correctColorName){
-            throw new IllegalArgumentException("Invalid color name.");
-        }
         if (!correctSize){
             throw new IllegalArgumentException("Invalid size.");
         }
