@@ -57,7 +57,7 @@ public class Printer implements AutoCloseable{
 
     private static Character checkCorrectMessage(String message){
         for (char c : message.toCharArray()){
-            if (!('A' <= c && c <= 'Z')){
+            if ('A' > c || c > 'Z'){
                 return c;
             }
         }
