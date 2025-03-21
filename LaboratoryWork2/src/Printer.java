@@ -47,14 +47,6 @@ public class Printer implements AutoCloseable{
         return false;
     }
 
-    private static TreeMap<Character, Integer> messageToMap(String message){
-        TreeMap<Character, Integer> charNumber = new TreeMap<>();
-        for (char c : message.toCharArray()){
-            charNumber.put(c, Character.getNumericValue(c) - Character.getNumericValue('A'));
-        }
-        return charNumber;
-    }
-
     private static Character checkCorrectMessage(String message){
         for (char c : message.toCharArray()){
             if ('A' > c || c > 'Z'){
@@ -62,6 +54,14 @@ public class Printer implements AutoCloseable{
             }
         }
         return null;
+    }
+
+    private static TreeSet<Character> messageToSet(String message){
+        TreeSet<Character> set = new TreeSet<>();
+        for (char c : message.toCharArray()){
+            set.add(c);
+        }
+        return set;
     }
 
     private static String[] parseJsonFile(String fileName, Character character) throws Exception {
@@ -73,10 +73,10 @@ public class Printer implements AutoCloseable{
     }
 
     private static TreeMap<Character, String[]> createFontForMessage(String message, String fileName) throws Exception {
-        TreeMap<Character, Integer> charNumber = messageToMap(message);
+        TreeSet<Character> set = messageToSet(message);
 
         TreeMap<Character, String[]> font = new TreeMap<>();
-        for (Character c : charNumber.keySet()){
+        for (Character c : set){
             font.put(c, parseJsonFile(fileName, c));
         }
 
@@ -97,16 +97,16 @@ public class Printer implements AutoCloseable{
             this.close();
             throw new IllegalArgumentException("Invalid message. Use only English letters. '" + illegalSymbol + "' got.");
         }
-        TreeMap<Character, Integer> charNumber = messageToMap(message);
 
         for (int i = 0; i < this.position.getLast(); i++){
             System.out.println();
         }
 
+        TreeSet<Character> charSet = messageToSet(message);
         TreeMap<Character, String[]> font = createFontForMessage(message, this.fileName);
 
         if (this.symbol != 'x'){
-            for (Character c : charNumber.keySet()){
+            for (Character c : charSet){
                 font.put(c, replace(font.get(c), this.symbol));
             }
         }
