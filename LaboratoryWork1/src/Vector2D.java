@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Vector2D implements Iterable<Vector2D> {
+public class Vector2D{
     private int x;
     private int y;
     private int z;
@@ -10,28 +10,10 @@ public class Vector2D implements Iterable<Vector2D> {
         this.y = y;
         this.z = z.length > 0 ? z[0] : 0;
     }
-
-    private List<Vector2D> vectors;
     
     public Vector2D(Point2D point1, Point2D point2) {
-        if (point1.iterator().hasNext() && point2.iterator().hasNext()) {
-            if (point1.size() != point2.size()) {
-                System.err.println("Error: point1 and point2 have different sizes");
-                return;
-            }
-
-            vectors = new ArrayList<>();
-            for (int i = 0; i < point1.size(); i++) {
-                vectors.add(new Vector2D(point1.getPoint(i), point2.getPoint(i)));
-            }
-
-        }else if (!point1.iterator().hasNext() && !point2.iterator().hasNext()) {
-            this.x = point2.getX() - point1.getX();
-            this.y = point2.getY() - point1.getY();
-
-        }else {
-            System.err.println("Error: point1 and point2 must be both Arrays or both Points");
-        }
+        this.x = point2.getX() - point1.getX();
+        this.y = point2.getY() - point1.getY();
     }
 
     public int getX() {
@@ -46,31 +28,10 @@ public class Vector2D implements Iterable<Vector2D> {
         return z;
     }
 
-    public int size() {
-        if (vectors != null) {return vectors.size();}
-        return 0;
-    }
-
-    public Vector2D getVector(int index) {
-        if (vectors == null || index < 0 || index > vectors.size()) {
-            System.err.println("Error: index out of bounds");
-            return null;
-        }
-
-        return vectors.get(index);
-    }
-
-    public void setVector(int index, Vector2D vector) {
-        if (vectors == null || index < 0 || index > vectors.size()) {
-            System.err.println("Error: index out of bounds");
-            return;
-        }
-        if (vector == null) {
-            System.err.println("Error: vector is null");
-            return;
-        }
-
-        vectors.set(index, vector);
+    public int get(int index) {
+        if (index == 0) return x;
+        else if (index == 1) return y;
+        throw new IndexOutOfBoundsException("index out of bounds");
     }
 
     @Override
@@ -86,14 +47,7 @@ public class Vector2D implements Iterable<Vector2D> {
     }
 
     @Override
-    public Iterator<Vector2D> iterator() {
-        if (vectors != null) {return vectors.iterator();}
-        return Collections.emptyIterator();
-    }
-
-    @Override
     public String toString() {
-        if (vectors != null) {return vectors.toString();}
         return z == 0 ? "Vector2D{" +
                 "x=" + x +
                 ", y=" + y +
@@ -105,11 +59,12 @@ public class Vector2D implements Iterable<Vector2D> {
                 '}';
     }
 
-    public static String abs(Vector2D vector){
+    public static double abs(Vector2D vector){
         double abs = Math.sqrt((double) vector.getX() * vector.getX()
                         + (double) vector.getY() * vector.getY()
                         + (double) vector.getZ() * vector.getZ());
-        return String.format("%.2f", abs);
+        double scale = Math.pow(10, 3);
+        return Math.floor(abs * scale) / scale;
     }
 
     public static int dotProduct(Vector2D vector1, Vector2D vector2){
@@ -122,7 +77,7 @@ public class Vector2D implements Iterable<Vector2D> {
                 vector1.getX() * vector2.getY() - vector1.getY() * vector2.getX());
     }
 
-    public static String crossProductModule(Vector2D vector1, Vector2D vector2){
+    public static double crossProductModule(Vector2D vector1, Vector2D vector2){
         return abs((crossProduct(vector1, vector2)));
     }
 
@@ -135,7 +90,7 @@ public class Vector2D implements Iterable<Vector2D> {
     }
 
     public int dotProduct(Vector2D vector) {
-        return this.x * vector.getX() + this.y * vector.getY() + this.z * vector.getZ();
+        return dotProduct(this, vector);
     }
 
     public Vector2D vectorNumberMultiplication(int number) {
@@ -143,14 +98,10 @@ public class Vector2D implements Iterable<Vector2D> {
     }
 
     public Vector2D crossProduct(Vector2D vector) {
-        return new Vector2D(this.y * vector.getZ() - this.z * vector.getY(),
-                this.z * vector.getX() - this.x * vector.getZ(),
-                this.x * vector.getY() - this.y * vector.getX());
+        return crossProduct(this, vector);
     }
 
-    public String crossProductModule(Vector2D vector) {
-        return abs(crossProduct(vector));
-    }
+    public double crossProductModule(Vector2D vector) {return crossProductModule(this, vector);}
 
     public int mixedProduct(Vector2D vector1, Vector2D vector2) {
         return this.x * vector1.getY() * vector2.getZ()
