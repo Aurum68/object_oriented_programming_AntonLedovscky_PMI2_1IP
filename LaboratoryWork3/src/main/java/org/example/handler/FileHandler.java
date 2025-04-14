@@ -56,6 +56,8 @@ public class FileHandler implements ILogHandler{
     }
 
     private void writeFile(String fileName, String text) {
+        if (text == null) throw new NullPointerException();
+
         List<String> lines = Arrays.asList(text.split("\n"));
         try {
             Files.write(Paths.get(this.directory, fileName), lines);

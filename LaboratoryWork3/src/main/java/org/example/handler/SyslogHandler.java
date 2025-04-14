@@ -3,7 +3,6 @@ package org.example.handler;
 import org.graylog2.syslog4j.Syslog;
 import org.graylog2.syslog4j.SyslogConstants;
 import org.graylog2.syslog4j.SyslogIF;
-import org.graylog2.syslog4j.impl.net.udp.UDPNetSyslog;
 
 public class SyslogHandler implements ILogHandler{
 
@@ -16,6 +15,7 @@ public class SyslogHandler implements ILogHandler{
 
     @Override
     public void handle(String text) {
+        if (text == null) throw new NullPointerException();
         syslog.info(text);
     }
 }

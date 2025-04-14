@@ -21,6 +21,7 @@ public class SocketHandler implements ILogHandler, Closeable {
 
     @Override
     public void handle(String text) {
+        if (text == null) throw new NullPointerException();
         try {
             output.writeUTF(text);
             output.flush();
