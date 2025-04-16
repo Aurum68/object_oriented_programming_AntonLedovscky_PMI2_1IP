@@ -3,13 +3,25 @@ package org.example;
 import org.example.filter.ILogFilter;
 import org.example.handler.ILogHandler;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Logger {
-    private final ILogFilter[] filters;
-    private final ILogHandler[] handlers;
+    private final List<ILogFilter> filters = new ArrayList<>();
+    private final List<ILogHandler> handlers = new ArrayList<>();
 
     public Logger(ILogFilter[] filters, ILogHandler[] handlers) {
-        this.filters = filters;
-        this.handlers = handlers;
+        add_filters(filters);
+        add_handlers(handlers);
+    }
+
+    private void add_filters(ILogFilter[] filters) {
+        Collections.addAll(this.filters, filters);
+    }
+
+    private void add_handlers(ILogHandler[] handlers) {
+        Collections.addAll(this.handlers, handlers);
     }
 
     public boolean log(String message) {
