@@ -4,8 +4,8 @@ import org.example.filter.ILogFilter;
 import org.example.handler.ILogHandler;
 
 public class Logger {
-    private ILogFilter[] filters;
-    private ILogHandler[] handlers;
+    private final ILogFilter[] filters;
+    private final ILogHandler[] handlers;
 
     public Logger(ILogFilter[] filters, ILogHandler[] handlers) {
         this.filters = filters;
