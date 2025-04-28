@@ -6,22 +6,15 @@ import java.util.regex.PatternSyntaxException;
 
 public class ReLogFilter implements ILogFilter {
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     public ReLogFilter(String pattern) {
-        if (!checkPattern(pattern)){
-            throw new PatternSyntaxException("Incorrect pattern", pattern, -1);
-        }
-        this.pattern = Pattern.compile(pattern);
-    }
-
-    private static boolean checkPattern(String pattern) {
         try {
             Pattern.compile(pattern);
-        } catch (PatternSyntaxException e) {
-            return false;
+        }catch(PatternSyntaxException e) {
+            throw new PatternSyntaxException("Invalid pattern", pattern, -1);
         }
-        return true;
+        this.pattern = Pattern.compile(pattern);
     }
 
     @Override
