@@ -44,8 +44,7 @@ public class Point2D{
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || this.getClass() != o.getClass()) return false;
-        Point2D point2D = (Point2D) o;
+        if (!(o instanceof Point2D point2D)) throw new ClassCastException();
         return x == point2D.x && y == point2D.y;
     }
 

@@ -1,5 +1,3 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
         Point2D point1 = new Point2D(5, 7);
@@ -24,5 +22,8 @@ public class Main {
         System.out.println("Module of " + vector1 + " x " + vector2 + " = " + vector1.crossProductModule(vector2));
         System.out.println(vector1 + " x " + vector2 + " x " + vector3 + " = " + vector1.mixedProduct(vector2, vector3));
         System.out.println(vector1 + ".x = " + vector1.get(0));
+
+        System.out.println(point1 + "==" + point2 + " : " + point1.equals(point2));
+        System.out.println(vector1 + "==" + vector2 + " : " + vector1.equals(vector2));
     }
 }

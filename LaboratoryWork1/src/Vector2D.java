@@ -36,8 +36,7 @@ public class Vector2D{
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || this.getClass() != o.getClass()) return false;
-        Vector2D vector2D = (Vector2D) o;
+        if (!(o instanceof Vector2D vector2D)) throw new ClassCastException();
         return x == vector2D.x && y == vector2D.y && z == vector2D.z;
     }
 
