@@ -25,5 +25,9 @@ public class Main {
 
         System.out.println(point1 + "==" + point2 + " : " + point1.equals(point2));
         System.out.println(vector1 + "==" + vector2 + " : " + vector1.equals(vector2));
+
+        for (Integer coord : vector1) {
+            System.out.println(coord);
+        }
     }
 }

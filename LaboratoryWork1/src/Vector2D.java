@@ -1,13 +1,18 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
-public class Vector2D{
+public class Vector2D implements Iterable<Integer>{
     private int x;
     private int y;
     private int z;
 
+    private List<Integer> coordinates = new ArrayList<>();
+
     public Vector2D(int x, int y, Integer... z) {
         this.x = x;
         this.y = y;
+        this.coordinates = Arrays.asList(x, y);
         this.z = z.length > 0 ? z[0] : 0;
     }
     
@@ -109,5 +114,22 @@ public class Vector2D{
                 - this.z * vector1.getY() * vector2.getX()
                 - this.y * vector1.getX() * vector2.getZ()
                 - this.x * vector1.getZ() * vector2.getY();
+    }
+
+    @Override
+    public @NotNull Iterator<Integer> iterator() {
+        return new Iterator<>() {
+            private int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                return i < coordinates.size();
+            }
+
+            @Override
+            public Integer next() {
+                return coordinates.get(i++);
+            }
+        };
     }
 }
