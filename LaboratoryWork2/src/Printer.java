@@ -1,3 +1,4 @@
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -6,6 +7,9 @@ import java.io.*;
 import java.util.*;
 
 public class Printer implements AutoCloseable{
+
+    private static final char DEFAULT_SYMBOL = 'x';
+    private static final String DIRECTORY = "src/fonts";
 
     public static class Position{
         private int x;
@@ -33,8 +37,7 @@ public class Printer implements AutoCloseable{
         public int getY(){return this.y;}
     }
 
-    private static final char DEFAULT_SYMBOL = 'x';
-    private static final String DIRECTORY = "src/fonts";
+
     private final String extension;
     private final String COLOR_CODE;
     private final int SIZE;
@@ -99,7 +102,7 @@ public class Printer implements AutoCloseable{
         return set;
     }
 
-    private static String[] parseJsonFile(String fileName, Character character) {
+    private static List<String> parseJsonFile(String fileName, Character character) {
         Object o;
         try {
             o = new JSONParser().parse(new FileReader(fileName));
@@ -108,14 +111,18 @@ public class Printer implements AutoCloseable{
         }
         JSONObject jsonObject = (JSONObject) o;
         String key = character.toString();
-        String value = jsonObject.get(key).toString();
-        return value.split("\n");
+        JSONArray jsonArray = (JSONArray) jsonObject.get(key);
+        List<String> list = new ArrayList<>();
+        for (Object o1 : jsonArray){
+            list.add(o1.toString());
+        }
+        return list;
     }
 
-    private static TreeMap<Character, String[]> createFontForMessage(String message, String fileName){
+    private static TreeMap<Character, List<String>> createFontForMessage(String message, String fileName){
         TreeSet<Character> set = messageToSet(message);
 
-        TreeMap<Character, String[]> font = new TreeMap<>();
+        TreeMap<Character, List<String>> font = new TreeMap<>();
         for (Character c : set){
             font.put(c, parseJsonFile(fileName, c));
 
@@ -124,9 +131,9 @@ public class Printer implements AutoCloseable{
         return font;
     }
 
-    private static String[] replace(String[] array, char symbol){
-        for (int i = 0; i < array.length; i++){
-            array[i] = array[i].replace(DEFAULT_SYMBOL, symbol);
+    private static List<String> replace(List<String> array, char symbol){
+        for (String s : array) {
+            s = s.replace(DEFAULT_SYMBOL, symbol);
         }
         return array;
     }
@@ -146,7 +153,7 @@ public class Printer implements AutoCloseable{
         }
 
         TreeSet<Character> charSet = messageToSet(message);
-        TreeMap<Character, String[]> font = createFontForMessage(message, this.fileName);
+        TreeMap<Character, List<String>> font = createFontForMessage(message, this.fileName);
 
         if (this.symbol != DEFAULT_SYMBOL){
             for (Character c : charSet){
@@ -157,7 +164,7 @@ public class Printer implements AutoCloseable{
         for (int j =0 ; j < this.SIZE; j++) {
             System.out.print(" ".repeat(this.position.getFirst()));
             for (int i = 0; i < message.length(); i++) {
-                String lineFromFont = font.get(message.charAt(i))[j];
+                String lineFromFont = font.get(message.charAt(i)).get(j);
                 if (lineFromFont.length() < this.SIZE * 2 + 2){
                     lineFromFont += " ".repeat(this.SIZE * 2 - lineFromFont.length() + 2);
                 }
