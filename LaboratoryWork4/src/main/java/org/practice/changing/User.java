@@ -2,9 +2,6 @@ package org.practice.changing;
 
 import lombok.Getter;
 import lombok.experimental.FieldNameConstants;
-import org.practice.validation.EmailValidation;
-import org.practice.validation.PasswordValidation;
-import org.practice.validation.UsernameValidation;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,28 +36,16 @@ public class User implements INotifyDataChanging{
     }
 
     public void setEmail(String email) {
-        if (!EmailValidation.isValid(email)) {
-            System.err.println("Invalid email address: " + email + ". Address wasn't changed.");
-            return;
-        }
         notifyPropertyChanging(Fields.email, this.email, email);
         this.email = email;
     }
 
     public void setUsername(String username) {
-        if (!UsernameValidation.isValid(username)) {
-            System.err.println("Invalid username: " + username + ". Username wasn't changed.");
-            return;
-        }
         notifyPropertyChanging(Fields.username, this.username, username);
         this.username = username;
     }
 
     public void setPassword(String password) {
-        if (!PasswordValidation.isValid(password)) {
-            System.err.println("Invalid password: " + password + ". Password wasn't changed.");
-            return;
-        }
         notifyPropertyChanging(Fields.password, this.password, password);
         this.password = password;
     }
@@ -73,6 +58,7 @@ public class User implements INotifyDataChanging{
     private <T> void notifyPropertyChanging(String propertyName, T oldValue, T newValue) {
         for (IPropertyChangingListener listener : listeners){
             listener.onPropertyChanging(this, propertyName, oldValue, newValue);
+            System.out.println();
         }
     }
 }
