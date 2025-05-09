@@ -9,38 +9,53 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SocketServer implements Closeable {
+    private final ServerSocket serverSocket;
+    private volatile boolean running = true;
 
-
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private DataInputStream dataInputStream;
-
-    public SocketServer() {
+    public SocketServer(int port) {
         try {
-            this.serverSocket = new ServerSocket(4004);
+            this.serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void listen() {
-        String text = null;
-        try {
-            this.clientSocket = serverSocket.accept();
-            dataInputStream = new DataInputStream(clientSocket.getInputStream());
-            text = dataInputStream.readUTF();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void run() {
+        while (running) {
+            try {
+                System.out.println("Ожидание клиента...");
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Клиент подключен: " + clientSocket.getRemoteSocketAddress());
 
-        FileHandler fileHandler = new FileHandler("socketLogs.txt");
-        fileHandler.handle(text);
+                DataInputStream input = new DataInputStream(clientSocket.getInputStream());
+                String message = input.readUTF();
+                System.out.println("Получено сообщение: " + message);
+
+                // Можно добавить обработку клиента или закрыть его
+                clientSocket.close();
+
+            } catch (IOException e) {
+                if (running) {
+                    System.err.println(e.getMessage());
+                } else {
+                    System.out.println("Сервер остановлен");
+                }
+            }
+        }
+    }
+
+    public void stop() {
+        running = false;
+        try {
+            // закрываем серверный сокет, чтобы прервать accept()
+            serverSocket.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
     public void close() throws IOException {
-        serverSocket.close();
-        clientSocket.close();
-        dataInputStream.close();
+        stop();
     }
 }

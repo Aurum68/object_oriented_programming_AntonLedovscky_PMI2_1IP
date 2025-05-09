@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.filter.ILogFilter;
 import org.example.handler.ILogHandler;
+import org.example.servers.SocketServer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,18 +25,16 @@ public class Logger {
         Collections.addAll(this.handlers, handlers);
     }
 
-    public boolean log(String message) {
+    public void log(String message) {
         for (ILogFilter filter : filters) {
             if (!filter.match(message)) {
                 System.err.println( filter.getClass().getSimpleName() + ": " + message  + " not matched");
-                return false;
+                return;
             }
         }
 
         for (ILogHandler handler : handlers) {
             handler.handle(message);
         }
-
-        return true;
     }
 }

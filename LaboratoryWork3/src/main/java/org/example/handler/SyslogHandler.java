@@ -6,7 +6,7 @@ import org.graylog2.syslog4j.SyslogIF;
 
 public class SyslogHandler implements ILogHandler{
 
-    private SyslogIF syslog;
+    private final SyslogIF syslog;
     public SyslogHandler() {
         syslog = Syslog.getInstance(SyslogConstants.UDP);
         syslog.getConfig().setHost("127.0.0.1");
@@ -17,5 +17,6 @@ public class SyslogHandler implements ILogHandler{
     public void handle(String text) {
         if (text == null) throw new NullPointerException();
         syslog.info(text);
+        System.out.printf("%s выведен в сислоги\n", text);
     }
 }
