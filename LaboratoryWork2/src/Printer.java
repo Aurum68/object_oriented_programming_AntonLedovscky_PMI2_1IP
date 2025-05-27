@@ -176,8 +176,10 @@ public class Printer implements AutoCloseable{
     }
 
     private static List<String> replace(List<String> array, char symbol){
-        for (String s : array) {
+        for (int i=0; i < array.size(); i++) {
+            String s = array.get(i);
             s = s.replace(DEFAULT_SYMBOL, symbol);
+            array.set(i, s);
         }
         return array;
     }
