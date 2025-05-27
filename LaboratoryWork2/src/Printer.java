@@ -10,6 +10,8 @@ public class Printer implements AutoCloseable{
 
     private static final char DEFAULT_SYMBOL = 'x';
     private static final String DIRECTORY = "src/fonts";
+    private static final String EXTENSION = ".json";
+
 
     public static class Position{
         private int x;
@@ -38,7 +40,6 @@ public class Printer implements AutoCloseable{
     }
 
 
-    private final String extension;
     private final String COLOR_CODE;
     private final int SIZE;
     private final boolean correctSize;
@@ -51,23 +52,22 @@ public class Printer implements AutoCloseable{
      * @param symbolOpt unnecessary char
      * */
     public Printer(Colors colorName, Position position, int size, Character... symbolOpt) throws Exception {
-        this.extension = ".json";
         this.position = new ArrayList<>();
         this.position.add(position.getX());
         this.position.add(position.getY());
 
-        this.correctSize = checkCorrectSize(size, this.extension);
+        this.correctSize = checkCorrectSize(size);
         if (!this.correctSize){
             this.close();
         }
         this.SIZE = size;
 
-        this.fileName = DIRECTORY + "/" + size + extension;
+        this.fileName = DIRECTORY + "/" + size + EXTENSION;
         this.symbol = symbolOpt.length > 0 ? symbolOpt[0] : DEFAULT_SYMBOL;
         this.COLOR_CODE = colorName.getColorCode();
     }
 
-    private static boolean checkCorrectSize(int size, String extension){
+    private static boolean checkCorrectSize(int size){
         File folder;
         try {
             folder = new File(DIRECTORY);
@@ -77,7 +77,7 @@ public class Printer implements AutoCloseable{
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles != null) {
             for (File file : listOfFiles) {
-                if (file.getName().equals(size + extension)){
+                if (file.getName().equals(size + EXTENSION)){
                     return true;
                 }
             }
@@ -85,57 +85,10 @@ public class Printer implements AutoCloseable{
         return false;
     }
 
-    private static Character checkCorrectMessage(String message){
-        for (char c : message.toCharArray()){
-            if ('A' > c || c > 'Z'){
-                return c;
-            }
+    public static void print(String message, Colors color, Position position, int size, Character... symbOpt) throws Exception {
+        try(Printer printer = new Printer(color, position, size, symbOpt)) {
+            printer.print(message);
         }
-        return null;
-    }
-
-    private static TreeSet<Character> messageToSet(String message){
-        TreeSet<Character> set = new TreeSet<>();
-        for (char c : message.toCharArray()){
-            set.add(c);
-        }
-        return set;
-    }
-
-    private static List<String> parseJsonFile(String fileName, Character character) {
-        Object o;
-        try {
-            o = new JSONParser().parse(new FileReader(fileName));
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
-        }
-        JSONObject jsonObject = (JSONObject) o;
-        String key = character.toString();
-        JSONArray jsonArray = (JSONArray) jsonObject.get(key);
-        List<String> list = new ArrayList<>();
-        for (Object o1 : jsonArray){
-            list.add(o1.toString());
-        }
-        return list;
-    }
-
-    private static TreeMap<Character, List<String>> createFontForMessage(String message, String fileName){
-        TreeSet<Character> set = messageToSet(message);
-
-        TreeMap<Character, List<String>> font = new TreeMap<>();
-        for (Character c : set){
-            font.put(c, parseJsonFile(fileName, c));
-
-        }
-
-        return font;
-    }
-
-    private static List<String> replace(List<String> array, char symbol){
-        for (String s : array) {
-            s = s.replace(DEFAULT_SYMBOL, symbol);
-        }
-        return array;
     }
 
     public void print(String message) throws Exception {
@@ -176,10 +129,57 @@ public class Printer implements AutoCloseable{
         System.out.print(Colors.RESET.getColorCode());
     }
 
-    public static void print(String message, Colors color, Position position, int size, Character... symbOpt) throws Exception {
-        try(Printer printer = new Printer(color, position, size, symbOpt)) {
-            printer.print(message);
+    private static Character checkCorrectMessage(String message){
+        for (char c : message.toCharArray()){
+            if ('A' > c || c > 'Z'){
+                return c;
+            }
         }
+        return null;
+    }
+
+    private static TreeSet<Character> messageToSet(String message){
+        TreeSet<Character> set = new TreeSet<>();
+        for (char c : message.toCharArray()){
+            set.add(c);
+        }
+        return set;
+    }
+
+    private static TreeMap<Character, List<String>> createFontForMessage(String message, String fileName){
+        TreeSet<Character> set = messageToSet(message);
+
+        TreeMap<Character, List<String>> font = new TreeMap<>();
+        for (Character c : set){
+            font.put(c, parseJsonFile(fileName, c));
+
+        }
+
+        return font;
+    }
+
+    private static List<String> parseJsonFile(String fileName, Character character) {
+        Object o;
+        try {
+            o = new JSONParser().parse(new FileReader(fileName));
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+        JSONObject jsonObject = (JSONObject) o;
+        String key = character.toString();
+        JSONArray jsonArray = (JSONArray) jsonObject.get(key);
+        List<String> list = new ArrayList<>();
+        for (Object o1 : jsonArray){
+            list.add(o1.toString());
+        }
+        return list;
+    }
+
+    private static List<String> replace(List<String> array, char symbol){
+        for (String s : array) {
+            s = s.replace(DEFAULT_SYMBOL, symbol);
+        }
+        return array;
     }
 
     @Override
