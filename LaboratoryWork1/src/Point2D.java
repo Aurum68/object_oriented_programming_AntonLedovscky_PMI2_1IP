@@ -57,9 +57,6 @@ public class Point2D{
 
     @Override
     public String toString() {
-        return "Point2D{" +
-                "x=" + this.x +
-                ", y=" + this.y +
-                '}';
+        return String.format("Point2D{%d, %d}", x, y);
     }
 }

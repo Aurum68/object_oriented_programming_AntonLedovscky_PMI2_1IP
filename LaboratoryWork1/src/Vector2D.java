@@ -3,11 +3,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class Vector2D implements Iterable<Integer>{
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private int z;
 
-    private List<Integer> coordinates = new ArrayList<>();
+    private final List<Integer> coordinates;
 
     public Vector2D(int x, int y, Integer... z) {
         this.x = x;
@@ -19,6 +19,7 @@ public class Vector2D implements Iterable<Integer>{
     public Vector2D(Point2D point1, Point2D point2) {
         this.x = point2.getX() - point1.getX();
         this.y = point2.getY() - point1.getY();
+        this.coordinates = Arrays.asList(this.x, this.y);
     }
 
     public int getX() {
@@ -52,15 +53,8 @@ public class Vector2D implements Iterable<Integer>{
 
     @Override
     public String toString() {
-        return z == 0 ? "Vector2D{" +
-                "x=" + x +
-                ", y=" + y +
-                '}' :
-                "Vector2D{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
+        return z == 0 ? String.format("Vector2D{x=%s, y=%s}", x, y) :
+                String.format("Vector2D{x=%s, y=%s, z=%s}", x, y, z);
     }
 
     public static double abs(Vector2D vector){
