@@ -15,10 +15,6 @@ public class CommandManager {
         commands.put(shortcut, command);
     }
 
-    public void unregisterCommand(String shortcut) {
-        commands.remove(shortcut);
-    }
-
     public Command getCommand(String shortcut) {
         return commands.get(shortcut);
     }
@@ -34,13 +30,5 @@ public class CommandManager {
             printCommand.execute();
             history.push(printCommand);
         }
-    }
-
-    public Map<String, Command> getAllCommands() {
-        return new HashMap<>(commands);
-    }
-
-    public void clearCommands() {
-        commands.clear();
     }
 }
