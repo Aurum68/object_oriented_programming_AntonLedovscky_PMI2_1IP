@@ -1,6 +1,7 @@
 package org.practice.persistence;
 
 import org.json.simple.JSONObject;
+import org.practice.memento.ShortcutMemento;
 import org.practice.model.ShortcutRegistry;
 import org.practice.writers.JsonWriter;
 
@@ -10,8 +11,8 @@ public class ShortcutRegistryPersistence {
 
     private static final JsonWriter JSON_WRITER = new JsonWriter();
 
-    public static void save(ShortcutRegistry shortcutRegistry) {
-        JSON_WRITER.write(new HashMap<>(shortcutRegistry.getAllShortcuts()));
+    public static void save(ShortcutMemento shortcutMemento) {
+        JSON_WRITER.write(new HashMap<>(shortcutMemento.getSnapshot()));
     }
 
     public static ShortcutRegistry load() {

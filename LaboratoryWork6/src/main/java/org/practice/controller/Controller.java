@@ -63,7 +63,7 @@ public class Controller implements ShortcutChangeListener{
     }
 
     private String registerShortcut() {
-        System.out.print("Перед началом регистрации - отпустите все клавиши и нажмите Enter...");
+        System.out.print("Before starting registration, release all keys and press Enter...");
         new Scanner(System.in).nextLine();
 
         this.keyboard.setListening(false);

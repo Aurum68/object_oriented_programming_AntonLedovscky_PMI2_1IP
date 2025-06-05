@@ -34,6 +34,7 @@ public class JsonWriter{
     }
 
     public void write(Map<String, String> map){
+        jsonObject.clear();
         jsonObject.putAll(map);
         saveToFile();
     }

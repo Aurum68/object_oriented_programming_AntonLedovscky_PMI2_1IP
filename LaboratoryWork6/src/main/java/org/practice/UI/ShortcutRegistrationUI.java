@@ -43,7 +43,7 @@ public class ShortcutRegistrationUI implements ShortcutListener {
         System.out.println();
         System.out.println("Input command to finish registration. You can choose one of the following commands:");
         for (String command : availableCommands) {
-            System.out.print("\t" + command);
+            System.out.print(command + "\n");
         }
 
         System.out.println();
